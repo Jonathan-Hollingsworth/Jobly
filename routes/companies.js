@@ -52,8 +52,22 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
 
 router.get("/", async function (req, res, next) {
   try {
-    const companies = await Company.findAll();
-    return res.json({ companies });
+    const {minEmployees, maxEmployees, nameLike} = req.params
+    if (minEmployees || maxEmployees) {
+      if (nameLike) {
+        const companies = await Company.findByEmployeeAndName(minEmployees, maxEmployees, nameLike)
+        return res.json({ companies });
+      } else {
+        const companies = await Company.findByEmployeeCount(minEmployees, maxEmployees)
+        return res.json({ companies });
+      }
+    } else if (nameLike) {
+      const companies = await Company.findByName(nameLike);
+      return res.json({ companies });
+    } else {
+      const companies = await Company.findAll();
+      return res.json({ companies });
+    }
   } catch (err) {
     return next(err);
   }

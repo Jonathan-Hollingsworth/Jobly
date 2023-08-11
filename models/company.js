@@ -61,6 +61,113 @@ class Company {
     return companiesRes.rows;
   }
 
+  /** Find companies filtered by minimum and maximum number of employees.
+   *
+   * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
+   * */
+
+  static async findByEmployeeCount(min, max) {
+    let companiesRes
+    if (min && max) {
+      if (min > max) throw new BadRequestError("minimum cannot be greater than maximum")
+      companiesRes = await db.query(
+        `SELECT handle,
+                name,
+                description,
+                num_employees AS "numEmployees",
+                logo_url AS "logoUrl"
+         FROM companies
+         WHERE num_employees BETWEEN $1 AND $2
+         ORDER BY name`, [min, max]);
+    } else if (min && !max) {
+      companiesRes = await db.query(
+        `SELECT handle,
+                name,
+                description,
+                num_employees AS "numEmployees",
+                logo_url AS "logoUrl"
+         FROM companies
+         WHERE num_employees >= $1
+         ORDER BY name`, [min]);
+    } else if (!min && max) {
+      companiesRes = await db.query(
+        `SELECT handle,
+                name,
+                description,
+                num_employees AS "numEmployees",
+                logo_url AS "logoUrl"
+         FROM companies
+         WHERE num_employees <= $1
+         ORDER BY name`, [max]);
+    };
+    return companiesRes.rows;
+  }
+
+  /** Find companies filtered by name.
+   *
+   * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
+   * */
+
+  static async findByName(name) {
+    const likeName = `%${name}%`
+    const companiesRes = await db.query(
+          `SELECT handle,
+                  name,
+                  description,
+                  num_employees AS "numEmployees",
+                  logo_url AS "logoUrl"
+           FROM companies
+           WHERE name ILIKE $1
+           ORDER BY name`, [`${likeName}`]);
+    return companiesRes.rows;
+  }
+
+  /** Find companies filtered by name and numEmployees.
+   *
+   * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
+   * */
+
+  static async findByEmployeeAndName(min, max, name) {
+    const likeName = `%${name}%`
+    let companiesRes
+    if (min && max) {
+      if (min > max) throw new BadRequestError("minimum cannot be greater than maximum")
+      companiesRes = await db.query(
+        `SELECT handle,
+                name,
+                description,
+                num_employees AS "numEmployees",
+                logo_url AS "logoUrl"
+         FROM companies
+         WHERE num_employees BETWEEN $1 AND $2
+         AND name ILIKE $3
+         ORDER BY name`, [min, max, likeName]);
+    } else if (min && !max) {
+      companiesRes = await db.query(
+        `SELECT handle,
+                name,
+                description,
+                num_employees AS "numEmployees",
+                logo_url AS "logoUrl"
+         FROM companies
+         WHERE num_employees >= $1
+         AND name ILIKE $2
+         ORDER BY name`, [min, likeName]);
+    } else if (!min && max) {
+      companiesRes = await db.query(
+        `SELECT handle,
+                name,
+                description,
+                num_employees AS "numEmployees",
+                logo_url AS "logoUrl"
+         FROM companies
+         WHERE num_employees <= $1
+         AND name ILIKE $2
+         ORDER BY name`, [max, likeName]);
+    };
+    return companiesRes.rows;
+  }
+
   /** Given a company handle, return data about company.
    *
    * Returns { handle, name, description, numEmployees, logoUrl, jobs }
