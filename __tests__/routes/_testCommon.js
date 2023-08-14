@@ -1,9 +1,9 @@
 "use strict";
 
-const db = require("../db.js");
-const User = require("../models/user");
-const Company = require("../models/company");
-const { createToken } = require("../helpers/tokens");
+const db = require("../../db.js");
+const User = require("../../models/user.js");
+const Company = require("../../models/company.js");
+const { createToken } = require("../../helpers/tokens.js");
 
 async function commonBeforeAll() {
   // noinspection SqlWithoutWhere
@@ -76,6 +76,7 @@ async function commonAfterAll() {
 
 
 const u1Token = createToken({ username: "u1", isAdmin: false });
+const u2Token = createToken({ username: "u2", isAdmin: true });
 
 
 module.exports = {
@@ -84,4 +85,5 @@ module.exports = {
   commonAfterEach,
   commonAfterAll,
   u1Token,
+  u2Token
 };
