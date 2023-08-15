@@ -93,6 +93,82 @@ class Job {
     return jobsRes.rows;
   };
 
+  /** Find jobs filtered by minimum salary that have equity.
+   *
+   * Returns [{ title, salary, equity, companyHandle }, ...]
+   * */
+
+  static async findByEquityAndSalary(minSalary) {
+    const jobsRes = await db.query(
+          `SELECT title,
+                  salary,
+                  equity,
+                  company_handle AS "companyHandle"
+           FROM jobs
+           WHERE equity > 0
+           AND salary >= $1
+           ORDER BY title`, [minSalary]);
+    return jobsRes.rows;
+  };
+
+  /** Find jobs filtered by title and minimum salary.
+   *
+   * Returns [{ title, salary, equity, companyHandle }, ...]
+   * */
+
+  static async findByTitleAndSalary(title, minSalary) {
+    const likeTitle = `%${title}%`
+    const jobsRes = await db.query(
+          `SELECT title,
+                  salary,
+                  equity,
+                  company_handle AS "companyHandle"
+           FROM jobs
+           WHERE title ILIKE $1
+           AND salary >= $2
+           ORDER BY title`, [likeTitle, minSalary]);
+    return jobsRes.rows;
+  };
+
+  /** Find jobs filtered by title that have equity.
+   *
+   * Returns [{ title, salary, equity, companyHandle }, ...]
+   * */
+
+  static async findByTitleAndEquity(title) {
+    const likeTitle = `%${title}%`
+    const jobsRes = await db.query(
+          `SELECT title,
+                  salary,
+                  equity,
+                  company_handle AS "companyHandle"
+           FROM jobs
+           WHERE equity > 0
+           AND title ILIKE $1
+           ORDER BY title`, [likeTitle]);
+    return jobsRes.rows;
+  };
+
+  /** Find jobs filtered by title and minimum salary that have equity.
+   *
+   * Returns [{ title, salary, equity, companyHandle }, ...]
+   * */
+
+  static async findByAll(title, minSalary) {
+    const likeTitle = `%${title}%`
+    const jobsRes = await db.query(
+          `SELECT title,
+                  salary,
+                  equity,
+                  company_handle AS "companyHandle"
+           FROM jobs
+           WHERE equity > 0
+           AND title ILIKE $1
+           AND salary >= $2
+           ORDER BY title`, [likeTitle, minSalary]);
+    return jobsRes.rows;
+  };
+
   /** Given a job's id, return data about job.
    *
    * Returns { id, title, salary, equity, company }
@@ -132,14 +208,14 @@ class Job {
     return job;
   };
 
-  /** Update company data with `data`.
+  /** Update job data with `data`.
    *
    * This is a "partial update" --- it's fine if data doesn't contain all the
    * fields; this only changes provided ones.
    *
-   * Data can include: {name, description, numEmployees, logoUrl}
+   * Data can include: { title, salary, equity, company }
    *
-   * Returns {handle, name, description, numEmployees, logoUrl}
+   * Returns { id, title, salary, equity, company }
    *
    * Throws NotFoundError if not found.
    */
