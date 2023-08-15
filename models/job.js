@@ -185,3 +185,5 @@ class Job {
     if (!job) throw new NotFoundError(`No job: ${id}`);
   }
 }
+
+module.exports = Job;
