@@ -118,7 +118,7 @@ class User {
   /** Given a username, return data about user.
    *
    * Returns { username, first_name, last_name, is_admin, jobs }
-   *   where jobs is { id, title, company_handle, company_name, state }
+   *   where jobs is [{ id, title, company_handle, company_name }, ...]
    *
    * Throws NotFoundError if user not found.
    **/
@@ -135,11 +135,31 @@ class User {
         [username],
     );
 
+    const jobRes = await db.query(
+      `SELECT j.id, j.title, j.company_handle AS "companyHandle", c.name AS "companyName"
+       FROM applications AS a
+         LEFT JOIN jobs AS j ON a.job_id = j.id
+         LEFT JOIN companies AS c ON j.company_handle = c.handle
+       WHERE a.username = $1`, [username])
+
     const user = userRes.rows[0];
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
+    user.jobs = jobRes.rows
+
     return user;
+  }
+
+  /** */
+
+  static async applyFor(username, jobId) {
+    const result = await db.query(
+      `INSERT INTO applications (username, job_id)
+       VALUES ($1, $2)
+       RETURNING username, job_id AS "jobId"`, [username, jobId])
+    
+    return result.rows[0]
   }
 
   /** Update user data with `data`.

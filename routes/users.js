@@ -80,6 +80,23 @@ router.get("/:username", ensureLoggedIn, async function (req, res, next) {
   }
 });
 
+/** POST /[username]/jobs/[id] => {applied: jobId}
+ * 
+ * Authorization required: login
+ **/
+
+router.post("/:username/jobs/:id", ensureLoggedIn, async function (req, res, next) {
+  try {
+    if (res.locals.user.username === req.params.username || res.locals.user.isAdmin) {
+      await User.applyFor(req.params.username, req.params.id)
+      return res.json({ applied: req.params.id });
+    }
+    throw new UnauthorizedError("Only admins and appropiate user can apply for a job")
+  } catch (error) {
+    return next(err);
+  }
+})
+
 
 /** PATCH /[username] { user } => { user }
  *
