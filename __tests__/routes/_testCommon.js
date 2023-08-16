@@ -3,15 +3,16 @@
 const db = require("../../db.js");
 const User = require("../../models/user.js");
 const Company = require("../../models/company.js");
+const Job = require("../../models/job.js");
 const { createToken } = require("../../helpers/tokens.js");
 
 async function commonBeforeAll() {
-  // noinspection SqlWithoutWhere
-  await db.query("DELETE FROM users");
-  // noinspection SqlWithoutWhere
-  await db.query("DELETE FROM companies");
+  const userDelete = db.query("DELETE FROM users");
+  const compDelete = db.query("DELETE FROM companies");
 
-  await Company.create(
+  await Promise.all([userDelete, compDelete])
+
+  const c1Query = Company.create(
       {
         handle: "c1",
         name: "C1",
@@ -19,7 +20,7 @@ async function commonBeforeAll() {
         description: "Desc1",
         logoUrl: "http://c1.img",
       });
-  await Company.create(
+  const c2Query = Company.create(
       {
         handle: "c2",
         name: "C2",
@@ -27,16 +28,8 @@ async function commonBeforeAll() {
         description: "Desc2",
         logoUrl: "http://c2.img",
       });
-  await Company.create(
-      {
-        handle: "c3",
-        name: "C3",
-        numEmployees: 3,
-        description: "Desc3",
-        logoUrl: "http://c3.img",
-      });
 
-  await User.register({
+  const u1Query = User.register({
     username: "u1",
     firstName: "U1F",
     lastName: "U1L",
@@ -44,22 +37,23 @@ async function commonBeforeAll() {
     password: "password1",
     isAdmin: false,
   });
-  await User.register({
+  const u2Query = User.register({
     username: "u2",
     firstName: "U2F",
     lastName: "U2L",
     email: "user2@user.com",
     password: "password2",
-    isAdmin: false,
+    isAdmin: true,
   });
-  await User.register({
-    username: "u3",
-    firstName: "U3F",
-    lastName: "U3L",
-    email: "user3@user.com",
-    password: "password3",
-    isAdmin: false,
-  });
+
+  await Promise.all([c1Query, c2Query, u1Query, u2Query])
+
+  await Job.create({
+    title: "j1",
+    salary: 15000,
+    equity: 0.6,
+    companyHandle: "c1"
+  })
 }
 
 async function commonBeforeEach() {

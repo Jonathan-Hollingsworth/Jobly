@@ -133,13 +133,6 @@ describe("GET /users", function () {
           email: "user2@user.com",
           isAdmin: false,
         },
-        {
-          username: "u3",
-          firstName: "U3F",
-          lastName: "U3L",
-          email: "user3@user.com",
-          isAdmin: false,
-        },
       ],
     });
   });
