@@ -197,8 +197,8 @@ class Company {
 
     const results = await Promise.all([companyQ, jobQ])
 
-    const companyRes = results.rows[0]
-    const jobRes = results.rows[1]
+    const companyRes = results[0]
+    const jobRes = results[1]
 
     const company = companyRes.rows[0];
 

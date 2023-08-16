@@ -47,9 +47,6 @@ describe("POST /companies", function () {
         .send(newCompany)
         .set("authorization", `Bearer ${u1Token}`);
     expect(resp.statusCode).toEqual(401);
-    expect(resp.body).toEqual({
-      company: newCompany,
-    });
   });
 
   test("bad request with missing data", async function () {
@@ -59,7 +56,7 @@ describe("POST /companies", function () {
           handle: "new",
           numEmployees: 10,
         })
-        .set("authorization", `Bearer ${u1Token}`);
+        .set("authorization", `Bearer ${u2Token}`);
     expect(resp.statusCode).toEqual(400);
   });
 
@@ -129,7 +126,7 @@ describe("GET /companies/:handle", function () {
           id: expect.any(Number),
           title: "j1",
           salary: 15000,
-          equity: 0.6
+          equity: "0.6"
         }]
       },
     });
@@ -252,7 +249,7 @@ describe("DELETE /companies/:handle", function () {
   test("not found for no such company", async function () {
     const resp = await request(app)
         .delete(`/companies/nope`)
-        .set("authorization", `Bearer ${u1Token}`);
+        .set("authorization", `Bearer ${u2Token}`);
     expect(resp.statusCode).toEqual(404);
   });
 });
