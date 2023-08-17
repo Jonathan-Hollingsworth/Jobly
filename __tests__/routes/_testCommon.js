@@ -14,7 +14,7 @@ async function commonBeforeAll() {
   const compDelete = db.query("DELETE FROM companies");
   const jobDelete = db.query("DELETE FROM jobs");
 
-  await Promise.all([userDelete, compDelete])
+  await Promise.all([applDelete, userDelete, compDelete, jobDelete])
 
   const c1Query = Company.create(
       {
