@@ -160,7 +160,7 @@ class User {
     const user = userCheck.rows[0]
     if(!user) throw new NotFoundError(`No user: ${username}`);
 
-    const result = await db.query(
+    await db.query(
       `INSERT INTO applications (username, job_id)
        VALUES ($1, $2)
        RETURNING username, job_id AS "jobId"`, [username, jobId])
