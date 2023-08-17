@@ -93,7 +93,7 @@ router.post("/:username/jobs/:id", ensureLoggedIn, async function (req, res, nex
     }
     throw new UnauthorizedError("Only admins and appropiate user can apply for a job")
   } catch (error) {
-    return next(err);
+    return next(error);
   }
 })
 
