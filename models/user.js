@@ -151,15 +151,19 @@ class User {
     return user;
   }
 
-  /** */
+  /** Applies user for specified job; returns undefined */
 
   static async applyFor(username, jobId) {
+
+    const userCheck = await db.query(`SELECT username FROM users WHERE username = $1`, [username])
+
+    const user = userCheck.rows[0]
+    if(!user) throw new NotFoundError(`No user: ${username}`);
+
     const result = await db.query(
       `INSERT INTO applications (username, job_id)
        VALUES ($1, $2)
        RETURNING username, job_id AS "jobId"`, [username, jobId])
-    
-    return result.rows[0]
   }
 
   /** Update user data with `data`.
