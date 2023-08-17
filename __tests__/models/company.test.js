@@ -7,8 +7,7 @@ const {
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
-  commonAfterAll,
-  jobId
+  commonAfterAll
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -87,6 +86,78 @@ describe("findAll", function () {
     ]);
   });
 });
+
+/************************************** findBy */
+
+describe('findByEmployeeCount', () => {
+  test('works', async () => {
+    const companies = await Company.findByEmployeeCount(2,3)
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+      {
+        handle: "c3",
+        name: "C3",
+        description: "Desc3",
+        numEmployees: 3,
+        logoUrl: "http://c3.img",
+      }
+    ])
+  })
+
+  test('bad request if min is higher than max', async () => {
+    try {
+      await Company.findByEmployeeCount(3,2)
+      fail();
+    } catch (error) {
+      expect(error instanceof BadRequestError).toBeTruthy();
+    }
+  })
+})
+
+describe('findByEmployeeAndName', () => {
+  test('works', async () => {
+    const companies = await Company.findByEmployeeAndName(2,3,'2')
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      }
+    ])
+  })
+
+  test('bad request if min is higher than max', async () => {
+    try {
+      await Company.findByEmployeeCount(3,2,'2')
+      fail();
+    } catch (error) {
+      expect(error instanceof BadRequestError).toBeTruthy();
+    }
+  })
+})
+
+describe('findByName', () => {
+  test('works', async () => {
+    const companies = await Company.findByName('2')
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      }
+    ])
+  })
+})
 
 /************************************** get */
 
