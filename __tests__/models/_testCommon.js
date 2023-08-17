@@ -35,7 +35,7 @@ async function commonBeforeAll() {
 
   const job = await db.query(`INSERT INTO jobs(title, salary, equity, company_handle)
                   VALUES (test, 12000, 0.5, c1)
-                  RETIRNING id`)
+                  RETURNING id`)
   
   jobId = job.rows[0].id
 }
