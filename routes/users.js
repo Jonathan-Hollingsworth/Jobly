@@ -89,7 +89,7 @@ router.post("/:username/jobs/:id", ensureLoggedIn, async function (req, res, nex
   try {
     if (res.locals.user.username === req.params.username || res.locals.user.isAdmin) {
       await User.applyFor(req.params.username, req.params.id)
-      return res.json({ applied: req.params.id });
+      return res.status(201).json({ applied: req.params.id });
     }
     throw new UnauthorizedError("Only admins and appropiate user can apply for a job")
   } catch (error) {
