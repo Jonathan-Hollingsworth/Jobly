@@ -50,7 +50,8 @@ class Job {
   static async findByTitle(title) {
     const likeTitle = `%${title}%`
     const jobsRes = await db.query(
-          `SELECT title,
+          `SELECT id,
+                  title,
                   salary,
                   equity,
                   company_handle AS "companyHandle"
@@ -67,7 +68,8 @@ class Job {
 
   static async findBySalary(minSalary) {
     const jobsRes = await db.query(
-          `SELECT title,
+          `SELECT id,
+                  title,
                   salary,
                   equity,
                   company_handle AS "companyHandle"
@@ -84,7 +86,8 @@ class Job {
 
   static async findByEquity() {
     const jobsRes = await db.query(
-          `SELECT title,
+          `SELECT id,
+                  title,
                   salary,
                   equity,
                   company_handle AS "companyHandle"
@@ -101,7 +104,8 @@ class Job {
 
   static async findByEquityAndSalary(minSalary) {
     const jobsRes = await db.query(
-          `SELECT title,
+          `SELECT id,
+                  title,
                   salary,
                   equity,
                   company_handle AS "companyHandle"
@@ -120,7 +124,8 @@ class Job {
   static async findByTitleAndSalary(title, minSalary) {
     const likeTitle = `%${title}%`
     const jobsRes = await db.query(
-          `SELECT title,
+          `SELECT id,
+                  title,
                   salary,
                   equity,
                   company_handle AS "companyHandle"
@@ -139,7 +144,8 @@ class Job {
   static async findByTitleAndEquity(title) {
     const likeTitle = `%${title}%`
     const jobsRes = await db.query(
-          `SELECT title,
+          `SELECT id,
+                  title,
                   salary,
                   equity,
                   company_handle AS "companyHandle"
@@ -158,7 +164,8 @@ class Job {
   static async findByAll(title, minSalary) {
     const likeTitle = `%${title}%`
     const jobsRes = await db.query(
-          `SELECT title,
+          `SELECT id,
+                  title,
                   salary,
                   equity,
                   company_handle AS "companyHandle"

@@ -171,9 +171,9 @@ describe('applyFor', () => {
       isAdmin: false,
       jobs: [{
         id: expect.any(Number),
-        title: "test",
-        companyHandle: "c1",
-        companyName: "C1"
+        title: "bad",
+        companyHandle: "c2",
+        companyName: "C2"
       }]
     });
   })
