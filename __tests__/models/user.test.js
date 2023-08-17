@@ -7,11 +7,12 @@ const {
 } = require("../../expressError");
 const db = require("../../db.js");
 const User = require("../../models/user.js");
+const Job = require("../../models/job");
 const {
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
-  commonAfterAll,
+  commonAfterAll
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -153,6 +154,30 @@ describe("get", function () {
     }
   });
 });
+
+/************************************** applyFor */
+
+describe('applyFor', () => {
+  test('works', async function (){
+    const jobs = await Job.findAll()
+    const jobId = jobs[0].id
+    await User.applyFor('u1', jobId)
+    let user = await User.get("u1");
+    expect(user).toEqual({
+      username: "u1",
+      firstName: "U1F",
+      lastName: "U1L",
+      email: "u1@email.com",
+      isAdmin: false,
+      jobs: [{
+        id: expect.any(Number),
+        title: "test",
+        companyHandle: "c1",
+        companyName: "C1"
+      }]
+    });
+  })
+})
 
 /************************************** update */
 

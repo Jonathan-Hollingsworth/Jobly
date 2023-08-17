@@ -6,8 +6,6 @@ const Company = require("../../models/company.js");
 const Job = require("../../models/job.js");
 const { createToken } = require("../../helpers/tokens.js");
 
-let jobId
-
 async function commonBeforeAll() {
   const applDelete = db.query("DELETE FROM applications");
   const userDelete = db.query("DELETE FROM users");
@@ -52,14 +50,12 @@ async function commonBeforeAll() {
 
   await Promise.all([c1Query, c2Query, u1Query, u2Query])
 
-  const job = await Job.create({
+  await Job.create({
     title: "j1",
     salary: 15000,
     equity: 0.6,
     companyHandle: "c1"
   })
-
-  jobId = job.id
 }
 
 async function commonBeforeEach() {
@@ -85,6 +81,5 @@ module.exports = {
   commonAfterEach,
   commonAfterAll,
   u1Token,
-  u2Token,
-  jobId
+  u2Token
 };
