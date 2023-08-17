@@ -156,9 +156,12 @@ class User {
   static async applyFor(username, jobId) {
 
     const userCheck = await db.query(`SELECT username FROM users WHERE username = $1`, [username])
+    const jobCheck = await db.query(`SELECT id FROM jobs WHERE id = $1`, [jobId])
 
     const user = userCheck.rows[0]
+    const job = jobCheck.rows[0]
     if(!user) throw new NotFoundError(`No user: ${username}`);
+    if(!job) throw new NotFoundError(`No job: ${jobId}`);
 
     await db.query(
       `INSERT INTO applications (username, job_id)

@@ -177,6 +177,26 @@ describe('applyFor', () => {
       }]
     });
   })
+
+  test("not found if no such user", async function () {
+    try {
+      const jobs = await Job.findAll()
+      const jobId = jobs[0].id
+      await User.applyFor("nope", jobId);
+      fail();
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+  
+  test("not found if no such job", async function () {
+    try {
+      await User.applyFor("u1", 0);
+      fail();
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
 })
 
 /************************************** update */
