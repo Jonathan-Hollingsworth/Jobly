@@ -212,6 +212,7 @@ class Job {
     const company = companyRes.rows[0];
 
     job.company = company
+    job.companyHandle = undefined
 
     return job;
   };
