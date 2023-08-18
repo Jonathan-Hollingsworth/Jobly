@@ -52,17 +52,17 @@ router.post("/", ensureAdmin, async function (req, res, next) {
 
 router.get("/", async function (req, res, next) {
   try {
-    const {minEmployees, maxEmployees, nameLike} = req.query
+    const {minEmployees, maxEmployees, name} = req.query
     if (minEmployees || maxEmployees) {
-      if (nameLike) {
-        const companies = await Company.findByEmployeeAndName(minEmployees, maxEmployees, nameLike)
+      if (name) {
+        const companies = await Company.findByEmployeeAndName(minEmployees, maxEmployees, name)
         return res.json({ companies });
       } else {
         const companies = await Company.findByEmployeeCount(minEmployees, maxEmployees)
         return res.json({ companies });
       }
-    } else if (nameLike) {
-      const companies = await Company.findByName(nameLike);
+    } else if (name) {
+      const companies = await Company.findByName(name);
       return res.json({ companies });
     } else {
       const companies = await Company.findAll();
