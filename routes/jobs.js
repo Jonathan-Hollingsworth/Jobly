@@ -51,7 +51,7 @@ router.post("/", ensureAdmin, async function (req, res, next) {
   
   router.get("/", async function (req, res, next) {
     try {
-      const {minSalary, title, hasEquity} = req.params
+      const {minSalary, title, hasEquity} = req.query
       if (minSalary) {
         if (title) {
           if (hasEquity) {
@@ -61,7 +61,7 @@ router.post("/", ensureAdmin, async function (req, res, next) {
           const jobs = await Job.findByTitleAndSalary(title, minSalary);
           return res.json({ jobs });
         }
-        const jobs = await Job.findBySalary(minEmployees, maxEmployees);
+        const jobs = await Job.findBySalary(minSalary);
         return res.json({ jobs });
       } 
       if (title) {

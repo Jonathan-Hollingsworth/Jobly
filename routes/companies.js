@@ -52,7 +52,7 @@ router.post("/", ensureAdmin, async function (req, res, next) {
 
 router.get("/", async function (req, res, next) {
   try {
-    const {minEmployees, maxEmployees, nameLike} = req.params
+    const {minEmployees, maxEmployees, nameLike} = req.query
     if (minEmployees || maxEmployees) {
       if (nameLike) {
         const companies = await Company.findByEmployeeAndName(minEmployees, maxEmployees, nameLike)
