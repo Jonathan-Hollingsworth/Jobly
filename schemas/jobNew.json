@@ -28,7 +28,6 @@
       "title",
       "salary",
       "equity",
-      "password",
       "companyHandle"
     ]
   }
