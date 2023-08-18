@@ -98,6 +98,70 @@ describe("GET /companies", function () {
     });
   });
 
+  describe('employee filter', () => {
+    test('works', async () => {
+      const resp = await request(app).get("/companies").query({minEmployees: 2, maxEmployees: 2})
+      expect(resp.body).toEqual({
+        companies:
+            [
+              {
+                handle: "c2",
+                name: "C2",
+                description: "Desc2",
+                numEmployees: 2,
+                logoUrl: "http://c2.img",
+              },
+            ],
+      });
+    })
+
+    test('bad request if min is higher than max', async () => {
+      const resp = await request(app).get("/companies").query({minEmployees: 2, maxEmployees: 1});
+      expect(resp.statusCode).toEqual(400)
+    })
+  })
+
+  test('name filter', async () => {
+    const resp = await request(app).get("/companies").query({name: "2"});
+
+    expect(resp.body).toEqual({
+      companies:
+          [
+            {
+              handle: "c2",
+              name: "C2",
+              description: "Desc2",
+              numEmployees: 2,
+              logoUrl: "http://c2.img",
+            },
+          ],
+    });
+  })
+
+  describe('both filter', () => {
+    test('works', async () => {
+      const resp = await request(app).get("/companies").query({minEmployees: 1, maxEmployees: 2, name: "2"});
+
+      expect(resp.body).toEqual({
+        companies:
+            [
+              {
+                handle: "c2",
+                name: "C2",
+                description: "Desc2",
+                numEmployees: 2,
+                logoUrl: "http://c2.img",
+              },
+            ],
+      });
+    })
+
+    test('bad request if min is higher than max', async () => {
+      const resp = await request(app).get("/companies").query({minEmployees: 2, maxEmployees: 1, name: "2"});
+      expect(resp.statusCode).toEqual(400)
+    })
+  })
+
   test("fails: test next() handler", async function () {
     // there's no normal failure event which will cause this route to fail ---
     // thus making it hard to test that the error-handler works with it. This
@@ -122,12 +186,19 @@ describe("GET /companies/:handle", function () {
         description: "Desc1",
         numEmployees: 1,
         logoUrl: "http://c1.img",
-        jobs: [{
-          id: expect.any(Number),
-          title: "j1",
-          salary: 15000,
-          equity: "0.6"
-        }]
+        jobs: [
+          {
+            id: expect.any(Number),
+            title: "j1",
+            salary: 15000,
+            equity: "0.6"
+          },
+          {
+            id: expect.any(Number),
+            title: "j2",
+            salary: 8000,
+            equity: "0",
+          }]
       },
     });
   });
