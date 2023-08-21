@@ -66,7 +66,7 @@ describe("findAll", function () {
     });
   });
   
-//   /************************************** findBy */
+/************************************** findBy */
   
   describe('findBySalary', () => {
     test('works', async () => {
