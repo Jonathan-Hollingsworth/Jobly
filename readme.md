@@ -8,5 +8,4 @@ To run this:
     
 To run the tests:
 
-    jest -i
-> You may need to end the tests manually with `CTRL+C`
+    jest -i --testPathIgnorePatterns=/_testCommon.js
